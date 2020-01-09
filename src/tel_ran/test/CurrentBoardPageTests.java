@@ -13,7 +13,7 @@ import tel_ran.helpers.TheBoardPageHelper;
 import java.util.List;
 
 public class CurrentBoardPageTests extends TestBase {
-
+    public static final String BOARD = "New";
     HomePageHelper homePage;
     LoginPageHelper loginPage;
     BoardsPageHelper boardPage;
@@ -36,9 +36,7 @@ public class CurrentBoardPageTests extends TestBase {
 
    @Test
     public void createNewList() throws InterruptedException {
-// ------------------open "New" board
-       driver.findElement(By.xpath("//div[@title='New']/..")).click();
-
+       boardPage.openBoard(BOARD);
        theBoardPage.waitUntilPageIsLoaded();
        int q = theBoardPage.quantityOfLists(); // quantity before added
        theBoardPage.addAnotherList();
