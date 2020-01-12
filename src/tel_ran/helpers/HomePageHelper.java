@@ -3,19 +3,21 @@ package tel_ran.helpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class HomePageHelper extends PageBase {
+    @FindBy (xpath = "//a[@href='/login']" )
+    WebElement loginIcon;
 
     public HomePageHelper(WebDriver driver){
         super( driver);
     }
 
     public void waitUntilPageIsLoaded() {
-        waitUntilElementIsClickable(By.xpath("//a[@href='/login']"), 50);
+        waitUntilElementIsClickable(loginIcon, 50);
     }
 
     public void openLoginPage() {
-        WebElement passwordInput = driver.findElement(By.xpath("//a[@href='/login']"));
-        passwordInput.click();
+        loginIcon.click();
     }
 }
