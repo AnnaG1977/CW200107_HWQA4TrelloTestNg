@@ -15,6 +15,7 @@ public abstract class PageBase {
         this.driver=driver;
     }
     public abstract void waitUntilPageIsLoaded();
+    //public abstract void waitUntilElementIsVisible();
 
     public void waitUntilElementIsClickable(By locator, int time) {
         try {
@@ -23,7 +24,6 @@ public abstract class PageBase {
             e.printStackTrace();
         }
     }
-
     public void waitUntilElementIsClickable(WebElement element, int time) {
         try {
             new WebDriverWait(driver, time).until(ExpectedConditions.elementToBeClickable(element));
@@ -32,7 +32,6 @@ public abstract class PageBase {
         }
     }
 
-
     public void waitUntilElementIsVisible(By locator, int time) {
         try {
             new WebDriverWait(driver,time).until(ExpectedConditions.visibilityOfElementLocated(locator));
@@ -40,10 +39,25 @@ public abstract class PageBase {
             e.printStackTrace();
         }
     }
+    public void waitUntilElementIsVisible(WebElement element, int time) {
+        try {
+            new WebDriverWait(driver,time).until(ExpectedConditions.visibilityOf(element));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void waitUntilAllElementsAreVisible(By locator, int time) {
         try {
             new WebDriverWait(driver,time).until(ExpectedConditions
                     .visibilityOfAllElementsLocatedBy(locator));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void waitUntilAllElementsAreVisible(WebElement element, int time) {
+        try {
+            new WebDriverWait(driver,time).until(ExpectedConditions.visibilityOfAllElements(element));
         } catch (Exception e) {
             e.printStackTrace();
         }

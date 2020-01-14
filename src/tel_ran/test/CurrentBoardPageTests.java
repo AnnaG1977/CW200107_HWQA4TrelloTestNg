@@ -1,9 +1,12 @@
 package tel_ran.test;
 
+import jdk.nashorn.internal.runtime.regexp.JoniRegExp;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import tel_ran.helpers.BoardsPageHelper;
 import tel_ran.helpers.HomePageHelper;
@@ -22,10 +25,19 @@ public class CurrentBoardPageTests extends TestBase {
     @BeforeMethod
     public void initTest(){
 
-        homePage = new HomePageHelper(driver);
-        loginPage = new LoginPageHelper(driver);
-        boardPage = new BoardsPageHelper(driver);
-        theBoardPage = new TheBoardPageHelper(driver);
+       // homePage = new HomePageHelper(driver);
+        homePage = PageFactory.initElements(driver,HomePageHelper.class);
+
+       // loginPage = new LoginPageHelper(driver);
+        loginPage = PageFactory.initElements(driver,LoginPageHelper.class);
+
+      //  boardPage = new BoardsPageHelper(driver);
+        boardPage = PageFactory.initElements(driver,BoardsPageHelper.class);
+
+      //  theBoardPage = new TheBoardPageHelper(driver);
+        theBoardPage = PageFactory.initElements(driver,TheBoardPageHelper.class);
+
+
 
         homePage.openLoginPage();
         loginPage.waitUntilPageIsLoaded();
@@ -35,7 +47,7 @@ public class CurrentBoardPageTests extends TestBase {
     }
 
    @Test
-    public void createNewList() throws InterruptedException {
+    public void createNewList()  {
        boardPage.openBoard(BOARD);
        theBoardPage.waitUntilPageIsLoaded();
        int q = theBoardPage.quantityOfLists(); // quantity before added
@@ -44,30 +56,63 @@ public class CurrentBoardPageTests extends TestBase {
        Assert.assertEquals(q+1,qEnd);
     }
     @Test
-    public void  addFirstCardInNewList () throws InterruptedException {
-        // ------------------ open  board with name "New"
-        driver.findElement(By.xpath("//div[@title='New']/..")).click();
+    public void  addFirstCardInNewList () /*throws InterruptedException*/ {
+        //----Open 'QA 4 Auto' board
+       // driver.findElement(By.xpath("//div[@title='QA4Haifa']/..")).click();
+        boardPage.openBoard("QA4Haifa");
+
+       // waitUntilElementIsClickable(By.cssSelector(".placeholder"), 30);
         theBoardPage.waitUntilPageIsLoaded();
-       //waitUntilElementIsClickable(By.cssSelector(".placeholder"),10);
-         //-----Add  new list------
-        driver.findElement(By.cssSelector(".placeholder")).click();
-        driver.findElement(By.cssSelector(".list-name-input"))
-                .sendKeys("New List");
+
+        //--------Get qantity of 'Add another card' buttons at the beginning----
+        int quantityAddAnotherButtonBeg = driver.findElements(By.xpath("//span[@class= 'js-add-another-card']")).size();
+
+        //-----Add a new list------
+        theBoardPage.addAnotherList();
+       /* driver.findElement(By.cssSelector(".placeholder")).click();
+          waitUntilElementIsVisible(By.cssSelector(".list-name-input"), 10);
+          driver.findElement(By.cssSelector(".list-name-input")).sendKeys("New List14012020");
+        waitUntilElementIsClickable(By.xpath("//input[@type='submit']"), 10);
         driver.findElement(By.xpath("//input[@type='submit']")).click();
-        waitUntilElementIsClickable(By.xpath("//span[@class='js-add-a-card']"),10);
+        waitUntilElementIsClickable(By.cssSelector("a.js-cancel-edit"), 10);
+        driver.findElement(By.cssSelector("a.js-cancel-edit")).click();
+        waitUntilElementIsVisible(By.cssSelector(".placeholder"), 10);*/
+
+
+        //----- Get the last 'Add card' button----
+
+      //  waitUntilAllElementsAreVisible(By.xpath("//span[@class = 'js-add-a-card']"), 15);
+      theBoardPage.waitUntilAdAnotherCardButtonIsVisible();
+
+        List<WebElement> listAddCardButtons = driver.findElements(By.xpath("//span[@class = 'js-add-a-card']"));
+
+        int sizeLstAddCardButtons = listAddCardButtons.size();
+        WebElement lastAddCardButton = listAddCardButtons.get(sizeLstAddCardButtons - 1);
+
 
         //----Add a first card for any new list
-        driver.findElements(By.xpath("//span[@class='js-add-a-card']")).get(0).click();
-        waitUntilElementIsClickable(By
-                .xpath("//input[@class='primary confirm mod-compact js-add-card']"),10);
+        lastAddCardButton.click();
+
+
+       /* waitUntilElementIsClickable(By
+                .xpath("//input[@class='primary confirm mod-compact js-add-card']"), 10);
         driver.findElement(By
-                .xpath("//textarea[@class='list-card-composer-textarea js-card-title']")).sendKeys("text");
+                .xpath("//textarea[@placeholder='Enter a title for this card…']")).sendKeys("text14012020");
         driver.findElement(By
                 .xpath("//input[@class='primary confirm mod-compact js-add-card']")).click();
-        waitUntilElementIsClickable(By.cssSelector(".placeholder"),10);
-            }
+
+        waitUntilElementIsClickable(By.cssSelector("a.js-cancel"), 10);
+        driver.findElement(By.cssSelector("a.js-cancel")).click();*/
+        theBoardPage.enterTitleForThisCard();
+        //--------Get quantity of 'Add another card' buttons at the end----
+       // waitUntilAllElementsAreVisible(By.xpath("//span[@class= 'js-add-another-card']"), 10);
+        theBoardPage.waitUntilAdAnotherCardButtonIsVisible();
+        int quantityAddAnotherButtonEnd = driver.findElements(By.xpath("//span[@class= 'js-add-another-card']")).size();
+
+        Assert.assertEquals(quantityAddAnotherButtonBeg + 1, quantityAddAnotherButtonEnd);
+    }
     @Test
-    public void deleteList() throws InterruptedException {
+    public void deleteList() /*throws InterruptedException */{
        // ------------------ open  board with name "New"
         driver.findElement(By.xpath("//div[@title='New']/..")).click();
 

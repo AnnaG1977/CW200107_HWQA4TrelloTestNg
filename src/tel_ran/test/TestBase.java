@@ -3,6 +3,7 @@ package tel_ran.test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
@@ -17,7 +18,9 @@ public class TestBase {
     @BeforeMethod
     public void setUp() throws InterruptedException {
         driver = new ChromeDriver();
-        homePage =new HomePageHelper(driver);
+        //homePage =new HomePageHelper(driver);
+        homePage = PageFactory.initElements(driver,HomePageHelper.class);
+
         //===========Enter to Trello====
         driver.get("https://trello.com/");
         driver.manage().window().maximize();

@@ -13,11 +13,17 @@ public class LoginPageHelper extends PageBase {
     @FindBy(id="login")
     WebElement loginButton;
 
-    @FindBy(xpath = "//button[@id='login-submit']//span[contains(text(),'Log in')]")
+    @FindBy(xpath = "//button[@id='login-submit']//span[contains(text(),'Войти')]")
     WebElement theSecondLoginButton;
 
-    @FindBy(xpath = "//button[@id='login-submit']//span[contains(text(),'Continue')]")
+    @FindBy(xpath = "//button[@id='login-submit']//span[contains(text(),'Продолжить')]")
     WebElement continueButton;
+    @FindBy(id = "password")
+    WebElement passwordField;
+    @FindBy(xpath = "//div[@id = 'login-error']/span")
+   WebElement passwordError;
+    @FindBy(xpath = "//p[@class='error-message']")
+    WebElement loginErrorWithAccount;
 
     public LoginPageHelper(WebDriver driver){
         super(driver);
@@ -25,38 +31,34 @@ public class LoginPageHelper extends PageBase {
     public void waitUntilPageIsLoaded() {
         waitUntilElementIsClickable(loginButton, 30);
     }
+
     public void enterAtlLogin(String login) {
 //        WebElement loginInput = driver.findElement(By.className("form-field"));
-
 //        userField.click();
 //        userField.clear();
 //        userField.sendKeys(login);
-
         enterValueToTheField(userField,login);
     }
-
-
 
     public void clickLoginWithAtlassian() {
         waitUntilElementIsClickable(loginButton,10);
         loginButton.click();
     }
     public void clickContinueButton() {
-        waitUntilElementIsClickable(By.id("login-submit"),30);
-        driver.findElement(By.id("login-submit")).click();//for a button  continue
+        waitUntilElementIsClickable(continueButton,30);
+        continueButton.click();
     }
     public void enterAtlPasswordAndLogin(String password) {
-        waitUntilElementIsClickable(By.id("password"),5); // for a field  password
-        waitUntilElementIsClickable(By.id("login-submit"),5); //for a button  enter
-        driver.findElement(By.id("password")).sendKeys(password);
-        driver.findElement(By.id("login-submit")).click();
+//        waitUntilElementIsClickable(By.id("password"),5); // for a field  password
+//        waitUntilElementIsClickable(By.id("login-submit"),5); //for a button  enter
+        waitUntilElementIsClickable(passwordField,5);
+        waitUntilElementIsClickable(continueButton,5);
+//        driver.findElement(By.id("password")).sendKeys(password);
+//        driver.findElement(By.id("login-submit")).click();
+        enterValueToTheField(passwordField,password);
+        theSecondLoginButton.click();
     }
-    public void enterAtlPassword(String password) {
-        waitUntilElementIsClickable(By.id("password"),10); // for a field  password
-        waitUntilElementIsClickable(By.id("login"),10); //for a button  enter
-        driver.findElement(By.id("password")).sendKeys(password);
-        driver.findElement(By.id("login")).click();
-    }
+
     public void loginToTrelloAsAtlassian(String login, String password){
         this.enterAtlLogin(login);
         this.clickLoginWithAtlassian();
@@ -65,19 +67,29 @@ public class LoginPageHelper extends PageBase {
     }
 
     public void waitPasswordError() {
-        waitUntilElementIsVisible(By
-                .xpath("//div[@id = 'login-error']/span"),10);
+        waitUntilElementIsVisible(passwordError,10);
     }
     public boolean verifyIfPasswordErrorIsCorrect(){
-        return driver.findElement(By.xpath("//div[@id = 'login-error']/span")).getText()
+        return passwordError.getText()
                 .contains("Неверный адрес электронной почты и/или пароль.\n" +
                         "Требуется помощь, чтобы войти?");
     }
     public void waitLoginErrorWithAccount(){
-        waitUntilElementIsVisible(By.xpath("//p[@class='error-message']"),20);
+        waitUntilElementIsVisible(loginErrorWithAccount,20);
     }
     public boolean verifyIfLoginErrorWithAccount(){
-        return driver.findElement(By.xpath("//p[@class='error-message']")).getText()
+        return loginErrorWithAccount.getText()
                 .contains("Аккаунт");
+    }
+
+    public void enterAtlPassword(String password) {
+        waitUntilElementIsClickable(By.id("password"),5); // for a field  password
+//        waitUntilElementIsClickable(By.id("login-submit"),5); //for a button  enter
+        waitUntilElementIsClickable(passwordField,5);
+        waitUntilElementIsClickable(continueButton,5);
+//        driver.findElement(By.id("password")).sendKeys(password);
+//        driver.findElement(By.id("login-submit")).click();
+        enterValueToTheField(passwordField,password);
+        loginButton.click();
     }
 }

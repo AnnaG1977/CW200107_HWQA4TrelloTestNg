@@ -22,7 +22,8 @@ public class LoginPageTests extends TestBase {
         //loginPage = new LoginPageHelper(driver);
         loginPage = PageFactory.initElements(driver,LoginPageHelper.class);
 
-        boardPage = new BoardsPageHelper(driver);
+       // boardPage = new BoardsPageHelper(driver);
+        boardPage = PageFactory.initElements(driver,BoardsPageHelper.class);
     }
     @Test
     public void loginToTrelloPositive()  {
